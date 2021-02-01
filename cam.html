@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <title>Camera Tunnel Lockdown</title>
+    </head>
+    <body>
+        <form methods="get" action="./cgi-bin/fxg-cam.py" id="form1">
+        Site Name : <br>
+        <input id='site_name' type='text' size='5' maxsize='5' name='site_name'><br>
+        Site Number : <br>
+        <input id='site_code' type='text' size='4' maxsize='4' name='site_code'><br>
+        <br>
+        <br>
+        Current Audodim<br>
+        <textarea id='autodim' type='text' cols='31' rows='20' name='autodim'></textarea>
+        <br>
+        Current SICK<br>
+        <textarea id='sick' type='text' cols='31' rows='20' name='sick'></textarea>
+        <br><br>
+        Cam Tun Controllers<br>
+        <textarea id='controllers' = type='text' cols='31' rows='20' name='controllers'></textarea>
+        <br><br>
+        <input type='submit' value='submit' name='submit'><br>
+        </form>
+    </body>

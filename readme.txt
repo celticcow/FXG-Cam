@@ -20,3 +20,13 @@ create rules at bottom of section  CamTunnel-Lockdown
 
 sscp-<letter>1    any -> (CamTunController-<num>, sspc-sick-<letter>-<num>, sscp-autodim-<letter>-<num>)
 sscp-<letter>2    (CamTunController-<num>, sspc-sick-<letter>-<num>, sscp-autodim-<letter>-<num>) -> any
+
+
+examples:
+
+SSPC-SICK-NPIT-150
+SSPC-Autodim-NPIT-150
+CamTunController-150
+
+
+SSPC-ALL  - SSPC-Autodim SSPC-Sick
