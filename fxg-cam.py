@@ -60,10 +60,10 @@ def main():
     form = cgi.FieldStorage()
 
     #static's
-    mds_ip = "146.18.96.16"  #"204.135.121.150"
-    cma_ip = "146.18.96.25"  #"204.135.121.164"
-    userid = "gdunlap"    #form.getvalue('user')
-    passwd = "2"     #form.getvalue('password')
+    mds_ip = "204.135.121.150"  # "146.18.96.16"
+    cma_ip = "204.135.121.164"  # "146.18.96.25"
+    userid = form.getvalue('user')
+    passwd = form.getvalue('password')
 
     ## html header and config data dump
     print ("Content-type:text/html\r\n\r\n")
@@ -174,9 +174,12 @@ def main():
     rule1_result = apifunctions.api_call(mds_ip, "add-access-rule", add_inbound, sid)
     rule2_result = apifunctions.api_call(mds_ip, "add-access-rule", add_outbound, sid)
 
-    print(rule1_result, end=end)
-    print(rule2_result, end=end)
-
+    if(debug == 1):
+        print("+++++ Rule Add +++++", end=end)
+        print(rule1_result, end=end)
+        print("+++++", end=end)
+        print(rule2_result, end=end)
+        print("+++++ Rule Add +++++", end=end)
 
     print("start of publish", end=end)
     time.sleep(5)
