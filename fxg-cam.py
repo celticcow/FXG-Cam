@@ -21,6 +21,12 @@ take 2 lists, send you the difference between the 2
 def ListDiff(li1, li2):
     return(list(list(set(li1)-set(li2)) + list(set(li2)-set(li1))))
 
+def ListDiff1(li1, li2):
+    return(list(set(li1)-set(li2)))
+
+def ListDiff2(li1, li2):
+    return(list(set(li2)-set(li1)))
+
 def get_group_contents(mds_ip, group, sid):
     debug = 0
     end = "<br>"
@@ -145,6 +151,13 @@ def main():
     print("Current Autodim vs input", end=end)
     print(cma_autodim, end=end)
     print(autodim, end=end)
+
+    """
+    output what needs to be modified for the different groups
+    can decide later if we need to automate this if it becomes a big deal
+    have never done a remove function before lol
+    """
+    
 
     if(ListDiff(sick, cma_sick) and ListDiff(autodim, cma_autodim)):
         #if both are different .. stop.  if just one proceed and check
