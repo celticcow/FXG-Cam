@@ -22,7 +22,7 @@ def ListDiff(li1, li2):
     return(list(list(set(li1)-set(li2)) + list(set(li2)-set(li1))))
 
 def get_group_contents(mds_ip, group, sid):
-    debug = 1
+    debug = 0
     end = "<br>"
     print("get_group_contents", end=end)
 
@@ -124,14 +124,19 @@ def main():
     # sick vs cma_sick
     # autodim vs cma_autodim
 
-    if(debug == 1):
-        print("#################################", end=end)
-        print(cma_sick, end=end)
-        print(sick, end=end)
-        print(cma_autodim, end=end)
-        print(autodim, end=end)
+    
+    print("#################################", end=end)
+    print("Check this for SICK Group Compat", end=end)
+    print("Current SICK grp vs input", end=end)
+    print(cma_sick, end=end)
+    print(sick, end=end)
+    print("Check this for Autodim Compat", end=end)
+    print("Current Autodim vs input")
+    print(cma_autodim, end=end)
+    print(autodim, end=end)
 
     if(ListDiff(sick, cma_sick) and ListDiff(autodim, cma_autodim)):
+        #if both are different .. stop.  if just one proceed and check
         print("Lists are different", end=end)
     else:
         #lists are good to go
@@ -151,24 +156,26 @@ def main():
     # need to add
     # "install-on" : "fw-fxg-hubs"
     add_inbound = {
-        "layer" : "TestONLY Network",
+        "layer" : "7VRF_FXG-Hub Security",
         "position" : {
             "bottom" : "CamTunnel-Lockdown"
         },
         "name" : "camtun-" + site_code + "1",
         "destination" : ["CamTunController-"+site_num, "SSPC-Autodim-" + site_code + "-" + site_num, "SSPC-SICK-" + site_code + "-" + site_num],
         "action" : "Accept",
-        "track" : "Log"
+        "track" : "Log",
+        "install-on" : "ece86de0-162e-452f-93b4-e8ab77c265e9"
     }
     add_outbound = {
-        "layer" : "TestONLY Network",
+        "layer" : "7VRF_FXG-Hub Security",
         "position" : {
             "bottom" : "CamTunnel-Lockdown"
         },
         "name" : "camtun-" + site_code + "2",
         "source" : ["CamTunController-"+site_num, "SSPC-Autodim-" + site_code + "-" + site_num, "SSPC-SICK-" + site_code + "-" + site_num],
         "action" : "Accept",
-        "track" : "Log"
+        "track" : "Log",
+        "install-on" : "ece86de0-162e-452f-93b4-e8ab77c265e9"
     }
 
     rule1_result = apifunctions.api_call(mds_ip, "add-access-rule", add_inbound, sid)

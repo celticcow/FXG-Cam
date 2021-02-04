@@ -69,11 +69,11 @@ def add_group_to_group(ip_addr, name, group, sid):
 make sure a check point object with this name exist or not.
 """
 def name_exist(ip_addr, name, sid):
-    print("temp -- in name_exist")
+    print("temp -- in name_exist<br>")
     check_name = {"order" : [{"ASC" : "name"}], "in" : ["name", name] }
     chkname = api_call(ip_addr, "show-objects", check_name, sid)
 
-    print(json.dumps(chkname))
+    #print(json.dumps(chkname))
 
     if(chkname['total'] == 0):
         return False
@@ -256,7 +256,7 @@ def add_a_host_with_group(ip_addr, name, ip, group, sid):
         if(name_exist(ip_addr, name, sid) == False):
             host_to_add = {"name" : name, "ip-address" : ip, "groups" : group, "color" : "light green"}
             out1 = api_call(ip_addr, "add-host", host_to_add, sid)
-            print(json.dumps(out1))
+            #print(json.dumps(out1))
         else:
             print("object with that name already exist")
     else:
@@ -271,6 +271,7 @@ def add_a_host_with_group(ip_addr, name, ip, group, sid):
         }
         out1 = api_call(ip_addr, "set-group", add_host_to_group_json, sid)
         print(json.dumps(out1))
+        print("<br>")
 
 """
 add a network object and add it to a group
