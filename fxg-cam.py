@@ -80,18 +80,22 @@ def main():
     site_num   = form.getvalue('site_code')  #"150"
 
     ## get the form data for SSPC
+    spidr_raw  = form.getvalue('spidr')
     autodim_raw = form.getvalue('autodim')
     sick_raw = form.getvalue('sick')
     controller_raw = form.getvalue('controllers')
 
+    spidr_stage1 = str(spidr_raw)
     autodim_stage1 = str(autodim_raw)
     sick_stage1 = str(sick_raw)
     controller_stage1 = str(controller_raw)
 
+    spidr_stage2 = spidr_stage1.split(' ')
     autodim_stage2 = autodim_stage1.split(' ')
     sick_stage2 = sick_stage1.split(' ')
     controller_stage2 = controller_stage1.split(' ')
 
+    spidr = spidr_stage2[0].split()
     autodim = autodim_stage2[0].split()
     sick    = sick_stage2[0].split()
     controllers = controller_stage2[0].split()
@@ -102,11 +106,14 @@ def main():
     #controllers = ['10.81.232.197', '10.81.232.231', '10.81.232.196', '10.81.233.196', '10.81.233.197', '10.81.232.226']
 
     if(debug == 1):
+        print(spidr, end=end)
+        print("----------------------------", end=end)
         print(autodim, end=end)
         print("----------------------------", end=end)
         print(sick, end=end)
         print("----------------------------", end=end)
 
+    site_spidr   = "SPIDR_Hubs-" + site_code + "-" + site_num
     site_autodim = "SSPC-Autodim-" + site_code + "-" + site_num
     site_sick    = "SSPC-SICK-" + site_code + "-" + site_num
 
@@ -117,6 +124,7 @@ def main():
         print("session id : " + sid, end=end)
     
     ####
+    cma_spidr   = get_group_contents(mds_ip, site_spidr, sid)
     cma_autodim = get_group_contents(mds_ip, site_autodim, sid)
     cma_sick    = get_group_contents(mds_ip, site_sick, sid)
 
@@ -124,20 +132,23 @@ def main():
     # sick vs cma_sick
     # autodim vs cma_autodim
 
-    
     print("#################################", end=end)
+    print("Check this for SPIDR Group Compat", end=end)
+    print("Current SPIDR grp vs input", end=end)
+    print(cma_spidr, end=end)
+    print(spidr, end=end)
     print("Check this for SICK Group Compat", end=end)
     print("Current SICK grp vs input", end=end)
     print(cma_sick, end=end)
     print(sick, end=end)
     print("Check this for Autodim Compat", end=end)
-    print("Current Autodim vs input")
+    print("Current Autodim vs input", end=end)
     print(cma_autodim, end=end)
     print(autodim, end=end)
 
     if(ListDiff(sick, cma_sick) and ListDiff(autodim, cma_autodim)):
         #if both are different .. stop.  if just one proceed and check
-        print("Lists are different", end=end)
+        print("BOTH Lists are different ... STOPPING WORK !!!", end=end)
     else:
         #lists are good to go
         print("SSPC are equiv", end=end)
@@ -151,42 +162,42 @@ def main():
         
         apifunctions.add_group_to_group(mds_ip, tmp_name, "Camera-Tunnel-Controller", sid)
         
-    #### rule build area
-    ### change layer to "7VRF_FXG-Hub Security"
-    # need to add
-    # "install-on" : "fw-fxg-hubs"
-    add_inbound = {
-        "layer" : "7VRF_FXG-Hub Security",
-        "position" : {
-            "bottom" : "CamTunnel-Lockdown"
-        },
-        "name" : "camtun-" + site_code + "1",
-        "destination" : ["CamTunController-"+site_num, "SSPC-Autodim-" + site_code + "-" + site_num, "SSPC-SICK-" + site_code + "-" + site_num],
-        "action" : "Accept",
-        "track" : "Log",
-        "install-on" : "ece86de0-162e-452f-93b4-e8ab77c265e9"
-    }
-    add_outbound = {
-        "layer" : "7VRF_FXG-Hub Security",
-        "position" : {
-            "bottom" : "CamTunnel-Lockdown"
-        },
-        "name" : "camtun-" + site_code + "2",
-        "source" : ["CamTunController-"+site_num, "SSPC-Autodim-" + site_code + "-" + site_num, "SSPC-SICK-" + site_code + "-" + site_num],
-        "action" : "Accept",
-        "track" : "Log",
-        "install-on" : "ece86de0-162e-452f-93b4-e8ab77c265e9"
-    }
+        #### rule build area
+        ### change layer to "7VRF_FXG-Hub Security"
+        # need to add
+        # "install-on" : "fw-fxg-hubs"
+        add_inbound = {
+            "layer" : "7VRF_FXG-Hub Security",
+            "position" : {
+                "bottom" : "CamTunnel-Lockdown"
+            },
+            "name" : "camtun-" + site_code + "1",
+            "destination" : ["CamTunController-"+site_num, "SSPC-Autodim-" + site_code + "-" + site_num, "SSPC-SICK-" + site_code + "-" + site_num],
+            "action" : "Accept",
+            "track" : "Log",
+            "install-on" : "ece86de0-162e-452f-93b4-e8ab77c265e9"
+        }
+        add_outbound = {
+            "layer" : "7VRF_FXG-Hub Security",
+            "position" : {
+                "bottom" : "CamTunnel-Lockdown"
+            },
+            "name" : "camtun-" + site_code + "2",
+            "source" : ["CamTunController-"+site_num, "SSPC-Autodim-" + site_code + "-" + site_num, "SSPC-SICK-" + site_code + "-" + site_num],
+            "action" : "Accept",
+            "track" : "Log",
+            "install-on" : "ece86de0-162e-452f-93b4-e8ab77c265e9"
+        }
 
-    rule1_result = apifunctions.api_call(mds_ip, "add-access-rule", add_inbound, sid)
-    rule2_result = apifunctions.api_call(mds_ip, "add-access-rule", add_outbound, sid)
+        rule1_result = apifunctions.api_call(mds_ip, "add-access-rule", add_inbound, sid)
+        rule2_result = apifunctions.api_call(mds_ip, "add-access-rule", add_outbound, sid)
 
-    if(debug == 1):
-        print("+++++ Rule Add +++++", end=end)
-        print(rule1_result, end=end)
-        print("+++++", end=end)
-        print(rule2_result, end=end)
-        print("+++++ Rule Add +++++", end=end)
+        if(debug == 1):
+            print("+++++ Rule Add +++++", end=end)
+            print(rule1_result, end=end)
+            print("+++++", end=end)
+            print(rule2_result, end=end)
+            print("+++++ Rule Add +++++", end=end)
 
     print("start of publish", end=end)
     time.sleep(5)

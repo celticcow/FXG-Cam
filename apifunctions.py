@@ -69,7 +69,7 @@ def add_group_to_group(ip_addr, name, group, sid):
 make sure a check point object with this name exist or not.
 """
 def name_exist(ip_addr, name, sid):
-    print("temp -- in name_exist<br>")
+    #print("temp -- in name_exist<br>")
     check_name = {"order" : [{"ASC" : "name"}], "in" : ["name", name] }
     chkname = api_call(ip_addr, "show-objects", check_name, sid)
 
