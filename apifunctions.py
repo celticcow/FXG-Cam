@@ -126,7 +126,7 @@ def add_a_group(ip_addr, name, sid):
         if(name_exist(ip_addr, name, sid) == False):
             group_to_add = {"name" : name, "color" : "light green"}
             out1 = api_call(ip_addr, "add-group", group_to_add, sid)
-            print(json.dumps(out1))
+            #print(json.dumps(out1))
         else:
             print("object with that name already exist")
     else:

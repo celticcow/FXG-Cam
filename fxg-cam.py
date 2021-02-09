@@ -58,6 +58,22 @@ def get_group_contents(mds_ip, group, sid):
     return(group_contents)
 #end of get_group_contents
 
+def group_tweak(cma_name, grp_name, cma_list, input_list):
+    end = "<br>"
+
+    print("Check this for " + grp_name + " Group Compare", end=end)
+    print("Current " + cma_name + " vs input", end=end)
+    print(cma_list, end=end)
+    print(input_list, end=end)
+
+    print(grp_name, end=end)
+    print("Remove from Group", end=end)
+    print(ListDiff1(cma_list, input_list), end=end)
+    print("Add to group", end=end)
+    print(ListDiff2(cma_list, input_list), end=end)
+    print("---------------------------------", end=end)
+# end of group_tweak
+
 def main():
     debug = 1
     end = "<br>"
@@ -138,26 +154,63 @@ def main():
     # sick vs cma_sick
     # autodim vs cma_autodim
 
-    print("#################################", end=end)
-    print("Check this for SPIDR Group Compat", end=end)
-    print("Current SPIDR grp vs input", end=end)
-    print(cma_spidr, end=end)
-    print(spidr, end=end)
-    print("Check this for SICK Group Compat", end=end)
-    print("Current SICK grp vs input", end=end)
-    print(cma_sick, end=end)
-    print(sick, end=end)
-    print("Check this for Autodim Compat", end=end)
-    print("Current Autodim vs input", end=end)
-    print(cma_autodim, end=end)
-    print(autodim, end=end)
-
     """
     output what needs to be modified for the different groups
     can decide later if we need to automate this if it becomes a big deal
     have never done a remove function before lol
     """
+
+    print("######### Group Compare #########", end=end)
+    print("#################################", end=end)
+
+    #group_tweak(cma_name, grp_name, cma_list, input_list)
+    group_tweak(site_spidr, "SPIDR", cma_spidr, spidr)
+    group_tweak(site_sick, "SICK", cma_sick, sick)
+    group_tweak(site_autodim, "AUTODIM", cma_autodim, autodim)
+
+    """
+    print("+++++++++++++++++++++++++++++++++++++++", end=end)
+
+    print("Check this for SPIDR Group Compat", end=end)
+    print("Current SPIDR grp vs input", end=end)
+    print(cma_spidr, end=end)
+    print(spidr, end=end)
+
+    print("Spidr HUB", end=end)
+    print("Remove from Group", end=end)
+    print(ListDiff1(cma_spidr, spidr), end=end)
+    print("Add to group", end=end)
+    print(ListDiff2(cma_spidr, spidr), end=end)
+    print("---------------------------------", end=end)
+
     
+    print("Check this for SICK Group Compat", end=end)
+    print("Current SICK grp vs input", end=end)
+    print(cma_sick, end=end)
+    print(sick, end=end)
+
+    print("SICK", end=end)
+    print("Remove from Group", end=end)
+    print(ListDiff1(cma_sick, sick), end=end)
+    print("Add to group", end=end)
+    print(ListDiff2(cma_sick, sick), end=end)
+    print("---------------------------------", end=end)
+
+    
+    print("Check this for Autodim Compat", end=end)
+    print("Current Autodim vs input", end=end)
+    print(cma_autodim, end=end)
+    print(autodim, end=end)
+
+    print("AUTODIM", end=end)
+    print("Remove from Group", end=end)
+    print(ListDiff1(cma_autodim, autodim), end=end)
+    print("Add to group", end=end)
+    print(ListDiff2(cma_autodim, autodim), end=end)
+    print("---------------------------------", end=end)
+    """
+
+    print("#################################", end=end)   
 
     if(ListDiff(sick, cma_sick) and ListDiff(autodim, cma_autodim)):
         #if both are different .. stop.  if just one proceed and check
@@ -224,6 +277,7 @@ def main():
     if(debug == 1):
         print(logout_result)
     
+    print("", end=end)
     print("------- end -------", end=end)
     print("</body>")
     print("</html>")
